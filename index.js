@@ -17,11 +17,11 @@ if (!config.get("jwtPrivateKey")) {
   process.exit(1);
 }
 
+const uri =
+  "mongodb+srv://user1:BlockUser@cluster0-i1zvw.mongodb.net/test?retryWrites=true&w=majority";
+
 mongoose
-  .connect("mongodb://localhost/test", {
-    useUnifiedTopology: true,
-    useNewUrlParser: true
-  })
+  .connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => console.log("mongodb connected..."))
   .catch(err => console.log("mongodb is not connected.", err));
 
