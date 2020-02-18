@@ -1,4 +1,4 @@
 {
-  "name": "default name",
-  "jwtPrivateKey": ""
+  "jwtPrivateKey": "",
+  "db": "mongodb://localhost/test"
 }

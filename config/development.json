@@ -1,3 +1,4 @@
 {
-  "name": "development name"
+  "jwtPrivateKey": "secureKey",
+  "db": "mongodb://localhost/test"
 }

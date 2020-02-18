@@ -17,11 +17,13 @@ if (!config.get("jwtPrivateKey")) {
   process.exit(1);
 }
 
-const uri =
-  "mongodb+srv://user1:BlockUser@cluster0-i1zvw.mongodb.net/test?retryWrites=true&w=majority";
+// const uri = "mongodb+srv://user1:BlockUser@cluster0-i1zvw.mongodb.net/test?retryWrites=true&w=majority";
 
 mongoose
-  .connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })
+  .connect(config.get("db"), {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+  })
   .then(() => console.log("mongodb connected..."))
   .catch(err => console.log("mongodb is not connected.", err));
 
@@ -34,8 +36,6 @@ app.use(logger);
 
 if (app.get("env") === "development") {
   app.use(morgan("tiny"));
-  //   console.log("name: ", config.get("key"));
-  //   console.log("name: ", config.get("name"));
 }
 
 app.use("/", home);
