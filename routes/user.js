@@ -8,6 +8,8 @@ const { User, validate } = require("../models/user");
 
 // router.post("/", auth, async (req, res) => {
 router.post("/register", async (req, res) => {
+  console.log("req-body: ", req.body);
+
   const { error } = validate(req.body);
   if (error) return res.status(400).send(error.details[0].message);
 
