@@ -2,6 +2,7 @@ const config = require("config");
 const helmet = require("helmet");
 const morgan = require("morgan");
 const express = require("express");
+const bodyParser = require("body-parser");
 const app = express();
 const logger = require("./middleware/logger");
 const products = require("./routes/products");
@@ -19,6 +20,7 @@ if (!config.get("jwtPrivateKey")) {
 
 // const uri = "mongodb+srv://user1:BlockUser@cluster0-i1zvw.mongodb.net/test?retryWrites=true&w=majority";
 if (app.get("env") === "production") console.log("DB: ", config.get("db"));
+if (app.get("env") === "development") console.log("DB: ", config.get("db"));
 
 mongoose
   .connect(config.get("db"), {
@@ -29,8 +31,15 @@ mongoose
   .catch(err => console.log("mongodb is not connected.", err));
 
 app.use(cors());
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+
+// parse application/x-www-form-urlencoded
+app.use(bodyParser.urlencoded({ extended: false }));
+
+// parse application/json
+app.use(bodyParser.json());
+
+// app.use(express.json());
+// app.use(express.urlencoded({ extended: true }));
 app.use(express.static("public"));
 app.use(helmet());
 app.use(logger);
