@@ -18,6 +18,7 @@ if (!config.get("jwtPrivateKey")) {
 }
 
 // const uri = "mongodb+srv://user1:BlockUser@cluster0-i1zvw.mongodb.net/test?retryWrites=true&w=majority";
+if (app.get("env") === "production") console.log("DB: ", config.get("db"));
 
 mongoose
   .connect(config.get("db"), {
