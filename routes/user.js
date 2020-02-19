@@ -20,7 +20,6 @@ router.post("/login", async (req, res) => {
       return res.status(400).send("Invalid email or password");
 
     const token = user.generateAuthToken();
-    // res.send(_.pick(user, ["_id", "name", "email"]));
     res.send(token);
   } catch (ex) {
     console.log(ex);
@@ -44,13 +43,12 @@ router.post("/register", async (req, res) => {
     user.password = await bcrypt.hash(password, salt);
 
     const resultSave = await user.save();
-    // const token = jwt.sign({ _id: user._id }, config.get("jwtPrivateKey"));
     const token = user.generateAuthToken();
 
     res
       .header("x-auth-token", token)
       .header("access-control-expose-headers", "x-auth-token")
-      .send(_.pick(resultSave, ["name", "email", "_id"]));
+      .send(_.pick(resultSave, ["fisrtName", "lastName", "email", "_id"]));
   } catch (ex) {
     console.log(ex);
     res.status(400).send(ex);
