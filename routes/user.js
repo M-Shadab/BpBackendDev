@@ -48,7 +48,7 @@ router.post("/register", async (req, res) => {
     res
       .header("x-auth-token", token)
       .header("access-control-expose-headers", "x-auth-token")
-      .send(_.pick(resultSave, ["fisrtName", "lastName", "email", "_id"]));
+      .send(_.pick(resultSave, ["firstName", "lastName", "email", "_id"]));
   } catch (ex) {
     console.log(ex);
     res.status(400).send(ex);
