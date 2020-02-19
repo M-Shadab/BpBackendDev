@@ -32,13 +32,13 @@ router.post("/register", async (req, res) => {
   const { error } = validateRegister(req.body);
   if (error) return res.status(400).send(error.details[0].message);
 
-  const { name, email, password } = req.body;
+  const { firstName, lastName, email, password } = req.body;
 
   try {
     const resultUser = await User.findOne({ email });
     if (resultUser) return res.status(400).send("user already existed");
 
-    const user = new User({ name, email, password });
+    const user = new User({ firstName, lastName, email, password });
 
     const salt = await bcrypt.genSalt(10);
     user.password = await bcrypt.hash(password, salt);
