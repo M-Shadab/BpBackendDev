@@ -21,18 +21,16 @@ const validate = req => {
 };
 
 router.post("/", async (req, res) => {
-  console.log("req: ", req.body);
   const { error } = validate(req.body);
-  console.log("err", error);
   if (error) return res.status(400).send(error.details[0].message);
 
-  const { name, email, password } = req.body;
+  const { email, password } = req.body;
 
   try {
     const user = await User.findOne({ email });
     if (!user) return res.status(400).send("Invalid email or password");
 
-    const validPassword = bcrypt.compare(req.body.password, user.password);
+    const validPassword = bcrypt.compare(password, user.password);
     if (!validPassword)
       return res.status(400).send("Invalid email or password");
 

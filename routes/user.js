@@ -3,14 +3,33 @@ const router = express.Router();
 const _ = require("lodash");
 const bcrypt = require("bcrypt");
 const auth = require("../middleware/auth");
+const { User, validateRegister, validateLogin } = require("../models/user");
 
-const { User, validate } = require("../models/user");
+router.post("/login", async (req, res) => {
+  const { error } = validateLogin(req.body);
+  if (error) return res.status(400).send(error.details[0].message);
 
-// router.post("/", auth, async (req, res) => {
+  const { email, password } = req.body;
+
+  try {
+    const user = await User.findOne({ email });
+    if (!user) return res.status(400).send("Invalid email or password");
+
+    const validPassword = bcrypt.compare(password, user.password);
+    if (!validPassword)
+      return res.status(400).send("Invalid email or password");
+
+    const token = user.generateAuthToken();
+    // res.send(_.pick(user, ["_id", "name", "email"]));
+    res.send(token);
+  } catch (ex) {
+    console.log(ex);
+    res.status(400).send(ex);
+  }
+});
+
 router.post("/register", async (req, res) => {
-  console.log("req-body: ", req.body);
-
-  const { error } = validate(req.body);
+  const { error } = validateRegister(req.body);
   if (error) return res.status(400).send(error.details[0].message);
 
   const { name, email, password } = req.body;
@@ -41,7 +60,6 @@ router.post("/register", async (req, res) => {
 router.get("/me", auth, async (req, res) => {
   const user = await User.findById(req.user._id).select("-password");
   res.send(user);
-  //   res.send("user");
 });
 
 module.exports = router;

@@ -6,7 +6,6 @@ const app = express();
 const logger = require("./middleware/logger");
 const products = require("./routes/products");
 const user = require("./routes/user");
-const auth = require("./routes/login");
 const home = require("./routes/home");
 const mongoose = require("mongoose");
 const _ = require("lodash");
@@ -17,9 +16,10 @@ if (!config.get("jwtPrivateKey")) {
   process.exit(1);
 }
 
-// const uri = "mongodb+srv://user1:BlockUser@cluster0-i1zvw.mongodb.net/test?retryWrites=true&w=majority";
-if (app.get("env") === "production") console.log("DB-URI: ", config.get("db"));
-if (app.get("env") === "development") console.log("DB: ", config.get("db"));
+if (!config.get("db")) {
+  console.log("FATAL_ERROR: db is not defined");
+  process.exit(1);
+}
 
 mongoose
   .connect(config.get("db"), {
@@ -44,7 +44,6 @@ if (app.get("env") === "development") {
 app.use("/", home);
 app.use("/api/products", products);
 app.use("/api/user", user);
-app.use("/api/login", auth);
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`server started at ${PORT}...`));
